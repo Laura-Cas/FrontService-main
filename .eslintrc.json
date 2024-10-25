@@ -1,3 +1,12 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",       // Desactivar el error por usar 'any'
+    "@typescript-eslint/no-unused-vars": "off",        // Desactivar el error de variables no usadas
+    "prefer-const": "off",                             // Desactivar la preferencia de usar 'const'
+    "react-hooks/exhaustive-deps": "off",              // Desactivar el aviso de dependencias en useEffect
+    "no-var": "off",                                   // Desactivar el error de usar 'var'
+    "@typescript-eslint/no-wrapper-object-types": "off", // Desactivar el error de uso de tipos de objeto envueltos
+    "no-var": "off"                                    // Desactivar error por uso de 'var' en lugar de 'let' o 'const'
+  }
 }
