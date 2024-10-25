@@ -25,9 +25,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       const esValida= isTokenValid(galletaAuth)
       if(esValida){
         setAcceso(true)
-        setUser(JSON.parse(galletaUser))
+        if (galletaUser) {
+          setUser(JSON.parse(galletaUser));
+        }
         router.push('/pages/dashboard');
-      }else{
+      }
+
+      else{
         setAcceso(false)
         eliminarCookie("auth")
         eliminarCookie("user")

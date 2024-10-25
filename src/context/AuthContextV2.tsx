@@ -1,3 +1,19 @@
-import { createContext } from "react";
+import React, { createContext, useContext, Dispatch, SetStateAction } from 'react';
 
-export const AuthContextV2 = createContext(null);
+
+
+interface AuthContextType {
+
+  acceso: boolean;
+
+  setAcceso: Dispatch<SetStateAction<boolean>>;
+
+  user: boolean;
+
+  setUser: Dispatch<SetStateAction<boolean>>;
+
+}
+
+
+
+export const AuthContextV2 = createContext<AuthContextType | null>(null);
