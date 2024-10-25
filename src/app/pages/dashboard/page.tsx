@@ -7,15 +7,20 @@ import { useContext } from "react";
 import { eliminarCookie, myFetchGET, getCookie } from '@/app/services/funcionesService';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
+import { Farm } from '@/app/services/farmService';
 export default function Dashboard() {
-  /*Contexto*/
-  const { user, acceso, setAcceso } = useContext(AuthContextV2);
+
+  const context = useContext(AuthContextV2);
+  const user = context?.user;
+  const setAcceso = context?.setAcceso;
   const router = useRouter();
 
   const cerrarSesion = () => {
     eliminarCookie("auth")
     eliminarCookie("user")
-    setAcceso(false)
+    if (setAcceso) {
+      setAcceso(false);
+    }
   }
 
   const confirmarCerrarSesion = () => {
@@ -36,38 +41,6 @@ export default function Dashboard() {
     });
   }
 
-  /*const handleDownload = async () => {
-    try {
-      const objetoPeticion =
-      {
-        "idFinca": 3,
-        "idProductor": 2
-      }
-
-
-      const response = await fetch('http://localhost:8080/api/v1/generarExcel', "POST", objetoPeticion); // Cambia esto a la ruta de tu servicio
-
-      console.log(response)
-      /* if (!response.ok) {
-         throw new Error('Error al descargar el archivo');
-       }
- 
-       const data = await response.arrayBuffer(); // Obtener el archivo como un ArrayBuffer
-       const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); // Crear un blob
-       const url = window.URL.createObjectURL(blob); // Crear una URL del blob
- 
-       const a = document.createElement('a'); // Crear un elemento de enlace
-       a.href = url;
-       a.download = 'archivo.xlsx'; // Nombre del archivo que se descargará
-       document.body.appendChild(a); // Agregar el enlace al cuerpo
-       a.click(); // Simular el clic en el enlace
-       a.remove(); // Eliminar el enlace
-       window.URL.revokeObjectURL(url); // Revocar la URL del blob
-    } catch (error) {
-      console.error('Error al descargar el archivo:', error);
-    }
-  }*/
-
     const mostrarModal = async() => {
       const galletaUser = getCookie('user')
       let id = 0
@@ -76,7 +49,7 @@ export default function Dashboard() {
         
         id = User.id
       }
-      const res: Farm[] = await myFetchGET("https://backnextjs-main-production.up.railway.app/api/v1/getFincasDeProductor/"+id)     
+      const res = await myFetchGET("https://backnextjs-main-production.up.railway.app/api/v1/getFincasDeProductor/"+id) as Farm[];     
       console.log(res) 
      
       // myFetch()
@@ -84,7 +57,7 @@ export default function Dashboard() {
       const comboHTML = `
           <select id="opciones" class="swal2-input">
               <option value="">Selecciona una Finca</option>
-              ${res.map(opcion => `<option value="${opcion.fincaId}">${opcion.nombre}</option>`).join('')}
+              ${res.map(opcion => <option value="${opcion.id}">${opcion.nombre}</option>).join('')}
           </select>
       `;
   
@@ -96,7 +69,7 @@ export default function Dashboard() {
           confirmButtonText: 'Descargar',
           cancelButtonText: 'Cancelar',
           preConfirm: () => {
-              const selectedOption = document.getElementById('opciones').value;
+              const selectedOption = (document.getElementById('opciones') as HTMLSelectElement)?.value;
               if (!selectedOption) {
                   Swal.showValidationMessage('Por favor, selecciona una opción');
               }
